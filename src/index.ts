@@ -7,8 +7,15 @@ console.log(user.get('age'));
 
 
 
-user.set({name:'Nico', age:78});
+user.on('change', ()=> {
+  console.log('hi');
+})
+
+user.on('change', () => {
+  console.log('bye');
+} )
+
+user.on('exit', ()=> {})
 
 
-console.log(user.get('name'));
-console.log(user.get('age'));
+console.log(user);

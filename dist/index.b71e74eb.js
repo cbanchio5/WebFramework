@@ -539,12 +539,14 @@ const user = new (0, _user.User)({
 });
 console.log(user.get("name"));
 console.log(user.get("age"));
-user.set({
-    name: "Nico",
-    age: 78
+user.on("change", ()=>{
+    console.log("hi");
 });
-console.log(user.get("name"));
-console.log(user.get("age"));
+user.on("change", ()=>{
+    console.log("bye");
+});
+user.on("exit", ()=>{});
+console.log(user);
 
 },{"./models/User":"4rcHn"}],"4rcHn":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -553,12 +555,18 @@ parcelHelpers.export(exports, "User", ()=>User);
 class User {
     constructor(data){
         this.data = data;
+        this.events = {};
     }
     get(propName) {
         return this.data[propName];
     }
     set(update) {
         Object.assign(this.data, update);
+    }
+    on(eventName, callback) {
+        const handlers = this.events[eventName] || [];
+        handlers.push(callback);
+        this.events[eventName] = handlers;
     }
 }
 
