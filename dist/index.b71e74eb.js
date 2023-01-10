@@ -546,7 +546,7 @@ user.on("change", ()=>{
     console.log("bye");
 });
 user.on("exit", ()=>{});
-console.log(user);
+user.trigger("change");
 
 },{"./models/User":"4rcHn"}],"4rcHn":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -567,6 +567,13 @@ class User {
         const handlers = this.events[eventName] || [];
         handlers.push(callback);
         this.events[eventName] = handlers;
+    }
+    trigger(eventName) {
+        const handlers = this.events[eventName];
+        if (!handlers || handlers.length === 0) return;
+        handlers.forEach((callback)=>{
+            callback();
+        });
     }
 }
 

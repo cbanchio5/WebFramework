@@ -18,4 +18,4 @@ user.on('change', () => {
 user.on('exit', ()=> {})
 
 
-console.log(user);
+user.trigger('change');
