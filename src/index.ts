@@ -18,4 +18,4 @@ user.on('change', () => {
 user.on('exit', ()=> {})
 
 
-user.trigger('change');
+user.trigger('hdhs');

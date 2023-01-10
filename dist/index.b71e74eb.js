@@ -546,7 +546,7 @@ user.on("change", ()=>{
     console.log("bye");
 });
 user.on("exit", ()=>{});
-user.trigger("change");
+user.trigger("hdhs");
 
 },{"./models/User":"4rcHn"}],"4rcHn":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
