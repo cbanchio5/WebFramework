@@ -537,18 +537,23 @@ const user = new (0, _user.User)({
     name: "new record",
     age: 0
 });
-user.save();
+user.events.on("change", ()=>{
+    console.log("change");
+});
+user.events.trigger("change");
 
 },{"./models/User":"4rcHn"}],"4rcHn":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "User", ()=>User);
-var _axios = require("axios");
-var _axiosDefault = parcelHelpers.interopDefault(_axios);
+var _eventing = require("./Eventing");
+var _sync = require("./Sync");
+const rootUrl = "http://localhost:3000/users";
 class User {
     constructor(data){
         this.data = data;
-        this.events = {};
+        this.events = new (0, _eventing.Eventing)();
+        this.sync = new (0, _sync.Sync)(rootUrl);
     }
     get(propName) {
         return this.data[propName];
@@ -556,32 +561,9 @@ class User {
     set(update) {
         Object.assign(this.data, update);
     }
-    on(eventName, callback) {
-        const handlers = this.events[eventName] || [];
-        handlers.push(callback);
-        this.events[eventName] = handlers;
-    }
-    trigger(eventName) {
-        const handlers = this.events[eventName];
-        if (!handlers || handlers.length === 0) return;
-        handlers.forEach((callback)=>{
-            callback();
-        });
-    }
-    fetch() {
-        (0, _axiosDefault.default).get(`http://localhost:3000/users/${this.get("id")}`).then((res)=>{
-            this.set(res.data);
-        });
-    }
-    save() {
-        const id = this.get("id");
-        if (id) //put
-        (0, _axiosDefault.default).put(`http://localhost:3000/users/${id}`, this.data);
-        else (0, _axiosDefault.default).post("http://localhost:3000/users", this.data);
-    }
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"6ApSA","axios":"jo6P5"}],"6ApSA":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"6ApSA","./Eventing":"7459s","./Sync":"QO3Gl"}],"6ApSA":[function(require,module,exports) {
 exports.interopDefault = function(a) {
     return a && a.__esModule ? a : {
         default: a
@@ -611,7 +593,48 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"jo6P5":[function(require,module,exports) {
+},{}],"7459s":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Eventing", ()=>Eventing);
+class Eventing {
+    events = {};
+    on(eventName, callback) {
+        const handlers = this.events[eventName] || [];
+        handlers.push(callback);
+        this.events[eventName] = handlers;
+    }
+    trigger(eventName) {
+        const handlers = this.events[eventName];
+        if (!handlers || handlers.length === 0) return;
+        handlers.forEach((callback)=>{
+            callback();
+        });
+    }
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"6ApSA"}],"QO3Gl":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "Sync", ()=>Sync);
+var _axios = require("axios");
+var _axiosDefault = parcelHelpers.interopDefault(_axios);
+class Sync {
+    constructor(rootUrl){
+        this.rootUrl = rootUrl;
+    }
+    fetch(id) {
+        return (0, _axiosDefault.default).get(`${this.rootUrl}/${id}`);
+    }
+    save(data) {
+        const { id  } = data;
+        if (id) //put
+        return (0, _axiosDefault.default).put(`${this.rootUrl}/${id}`, data);
+        else return (0, _axiosDefault.default).post(this.rootUrl, data);
+    }
+}
+
+},{"axios":"jo6P5","@parcel/transformer-js/src/esmodule-helpers.js":"6ApSA"}],"jo6P5":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "default", ()=>(0, _axiosJsDefault.default));
