@@ -1,21 +1,9 @@
 import { User } from "./models/User";
+import axios from 'axios';
 
 
-const user = new User({name:'Cesar', age:30})
-console.log(user.get('name'));
-console.log(user.get('age'));
+const user = new User({name: 'new record', age:0});
 
 
 
-user.on('change', ()=> {
-  console.log('hi');
-})
-
-user.on('change', () => {
-  console.log('bye');
-} )
-
-user.on('exit', ()=> {})
-
-
-user.trigger('hdhs');
+user.save();
