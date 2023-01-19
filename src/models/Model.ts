@@ -24,7 +24,7 @@ interface HasId {
 export class Model<T extends HasId> {
   constructor(
     private attributes: ModelAttributes<T>,
-    private Events: Events,
+    private events: Events,
     private sync: Sync<T>) {}
 
 
