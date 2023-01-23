@@ -1,22 +1,30 @@
+import {User} from '../models/User';
+
 export class UserForm {
-  constructor(public parent:HTMLElement) {}
+  constructor(public parent:HTMLElement, public model: User) {}
 
   eventsMap() : {[key: string] : () => void} {
     return {
-      'click:button' : this.onButtonClick
+
+      'click:.set-age' : this.onSetAgeClick
     }
   }
 
-  onButtonClick() : void {
-    console.log('Cicked!')
+
+
+  onSetAgeClick = (): void =>  {
+    this.model.setRandomAge();
   }
 
   template() : string {
     return `
     <div>
     <h1>User Form</h1>
+    <div> User name: ${this.model.get('name')}</div>
+    <div> User name: ${this.model.get('age')}</div>
     <input />
     <button>Click me </button>
+    <button class="set-age">Set random age </button>
     </div>
     `
   }
