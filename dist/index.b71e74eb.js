@@ -555,6 +555,12 @@ class UserForm {
         this.onSetAgeClick = ()=>{
             this.model.setRandomAge();
         };
+        this.bindModel();
+    }
+    bindModel() {
+        this.model.on("change", ()=>{
+            this.render();
+        });
     }
     eventsMap() {
         return {
@@ -583,6 +589,7 @@ class UserForm {
         }
     }
     render() {
+        this.parent.innerHTML = "";
         const templateElement = document.createElement("template");
         templateElement.innerHTML = this.template();
         this.bindEvents(templateElement.content);
