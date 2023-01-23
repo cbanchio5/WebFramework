@@ -533,8 +533,11 @@ function hmrAcceptRun(bundle, id) {
 
 },{}],"h7u1C":[function(require,module,exports) {
 var _userForm = require("./views/UserForm");
-const userForm = new (0, _userForm.UserForm)(document.getElementById("root"));
-userForm.render();
+const element = document.getElementById("root");
+if (element) {
+    const userForm = new (0, _userForm.UserForm)(element);
+    userForm.render();
+}
 
 },{"./views/UserForm":"gXSLD"}],"gXSLD":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -544,17 +547,36 @@ class UserForm {
     constructor(parent){
         this.parent = parent;
     }
+    eventsMap() {
+        return {
+            "click:button": this.onButtonClick
+        };
+    }
+    onButtonClick() {
+        console.log("Cicked!");
+    }
     template() {
         return `
     <div>
     <h1>User Form</h1>
     <input />
+    <button>Click me </button>
     </div>
     `;
+    }
+    bindEvents(fragment) {
+        const eventMaps = this.eventsMap();
+        for(let eventKey in eventMaps){
+            const [eventName, selector] = eventKey.split(":");
+            fragment.querySelectorAll(selector).forEach((element)=>{
+                element.addEventListener(eventName, eventMaps[eventKey]);
+            });
+        }
     }
     render() {
         const templateElement = document.createElement("template");
         templateElement.innerHTML = this.template();
+        this.bindEvents(templateElement.content);
         this.parent.append(templateElement.content);
     }
 }
