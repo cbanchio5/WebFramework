@@ -553,7 +553,8 @@ class UserForm extends (0, _view.View) {
     eventsMap() {
         return {
             "click:.set-age": this.onSetAgeClick,
-            "click:.set-name": this.onSetNameClick
+            "click:.set-name": this.onSetNameClick,
+            "click:.save-model": this.onSaveClick
         };
     }
     onSetAgeClick = ()=>{
@@ -568,15 +569,16 @@ class UserForm extends (0, _view.View) {
             });
         }
     };
+    onSaveClick = ()=>{
+        this.model.save();
+    };
     template() {
         return `
     <div>
-    <h1>User Form</h1>
-    <div> User name: ${this.model.get("name")}</div>
-    <div> User name: ${this.model.get("age")}</div>
-    <input />
+    <input placeholder="${this.model.get("name")}" />
     <button class="set-name">Change Name</button>
     <button class="set-age">Set random age </button>
+    <button class="save-model">Save User</button>
     </div>
     `;
     }
