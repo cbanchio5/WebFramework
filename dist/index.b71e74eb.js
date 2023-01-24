@@ -542,39 +542,32 @@ const user = (0, _user.User).buildUser({
 if (element) {
     const userForm = new (0, _userForm.UserForm)(element, user);
     userForm.render();
-}
+} else throw new Error("root element not found");
 
 },{"./views/UserForm":"gXSLD","./models/User":"4rcHn"}],"gXSLD":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "UserForm", ()=>UserForm);
-class UserForm {
-    constructor(parent, model){
-        this.parent = parent;
-        this.model = model;
-        this.onSetAgeClick = ()=>{
-            this.model.setRandomAge();
-        };
-        this.onSetNameClick = ()=>{
-            const input = this.parent.querySelector("input");
-            const name = input?.value;
-            this.model.set({
-                name
-            });
-        };
-        this.bindModel();
-    }
-    bindModel() {
-        this.model.on("change", ()=>{
-            this.render();
-        });
-    }
+var _view = require("./View");
+class UserForm extends (0, _view.View) {
     eventsMap() {
         return {
             "click:.set-age": this.onSetAgeClick,
             "click:.set-name": this.onSetNameClick
         };
     }
+    onSetAgeClick = ()=>{
+        this.model.setRandomAge();
+    };
+    onSetNameClick = ()=>{
+        const input = this.parent.querySelector("input");
+        if (input) {
+            const name = input.value;
+            this.model.set({
+                name
+            });
+        }
+    };
     template() {
         return `
     <div>
@@ -587,25 +580,9 @@ class UserForm {
     </div>
     `;
     }
-    bindEvents(fragment) {
-        const eventMaps = this.eventsMap();
-        for(let eventKey in eventMaps){
-            const [eventName, selector] = eventKey.split(":");
-            fragment.querySelectorAll(selector).forEach((element)=>{
-                element.addEventListener(eventName, eventMaps[eventKey]);
-            });
-        }
-    }
-    render() {
-        this.parent.innerHTML = "";
-        const templateElement = document.createElement("template");
-        templateElement.innerHTML = this.template();
-        this.bindEvents(templateElement.content);
-        this.parent.append(templateElement.content);
-    }
 }
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"6ApSA"}],"6ApSA":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"6ApSA","./View":"5Vo78"}],"6ApSA":[function(require,module,exports) {
 exports.interopDefault = function(a) {
     return a && a.__esModule ? a : {
         default: a
@@ -635,7 +612,40 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"4rcHn":[function(require,module,exports) {
+},{}],"5Vo78":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "View", ()=>View);
+class View {
+    constructor(parent, model){
+        this.parent = parent;
+        this.model = model;
+        this.bindModel();
+    }
+    bindModel() {
+        this.model.on("change", ()=>{
+            this.render();
+        });
+    }
+    bindEvents(fragment) {
+        const eventMaps = this.eventsMap();
+        for(let eventKey in eventMaps){
+            const [eventName, selector] = eventKey.split(":");
+            fragment.querySelectorAll(selector).forEach((element)=>{
+                element.addEventListener(eventName, eventMaps[eventKey]);
+            });
+        }
+    }
+    render() {
+        this.parent.innerHTML = "";
+        const templateElement = document.createElement("template");
+        templateElement.innerHTML = this.template();
+        this.bindEvents(templateElement.content);
+        this.parent.append(templateElement.content);
+    }
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"6ApSA"}],"4rcHn":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "User", ()=>User);
